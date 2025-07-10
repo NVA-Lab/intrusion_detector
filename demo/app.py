@@ -82,8 +82,6 @@ class HumanDetectionApp:
                 signal_type = data.get('signal_type', 'analysis')
                 if description:
                     message = f"analysis result: {description}"
-                    if bbox_normalized:
-                        message += f" (BBox: {bbox_normalized})"
                     self.detection_processor.alert_manager.send_alert(
                         AlertCodes.INTRUSION_DETECTED,
                         message
