@@ -41,12 +41,12 @@ MQTT_PTZ_CLIENT_ID = "human_app_ptz"
 MQTT_PTZ_KEEPALIVE = 15
 
 # PTZ control settings
-PTZ_INIT_PAN = 120
-PTZ_INIT_TILT = 120
+PTZ_INIT_PAN = 100
+PTZ_INIT_TILT = 140
 PTZ_PAN_DIR = -1
 PTZ_TILT_DIR = 1
 PTZ_DEADZONE_PX = 5
-PTZ_MIN_STEP_DEG = 0.05
+PTZ_MIN_STEP_DEG = 1.0
 PTZ_SMOOTH_ALPHA = 0.40
 
 # DAM API settings
@@ -70,3 +70,19 @@ CSI_WINDOW_SIZE = 320
 CSI_STRIDE = 40
 CSI_SMALL_WIN_SIZE = 64
 CSI_FPS_LIMIT = 10
+
+# Zone-based PTZ control settings for CSI mode
+ZONE_PTZ_ANGLES = {
+    1: {"pan": 80, "tilt": 0},
+    2: {"pan": 140, "tilt": 0},
+    3: {"pan": 90, "tilt": 20},
+    4: {"pan": 140, "tilt": 40},
+    5: {"pan": 90, "tilt": 80},
+    6: {"pan": 130, "tilt": 100},
+}
+
+PERSON_FRAME_MARGIN = 10
+
+# CSI mode settings
+CSI_ZONE_TOPIC = "Loc/zone/response"
+CSI_PERSON_LOST_FRAMES = 1

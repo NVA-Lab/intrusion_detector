@@ -1,14 +1,3 @@
-"""
-mqtt_manager.py
-----
-MQTT manager for CSI data processing.
-
-Key Functions
-----
-• start_csi_mqtt_thread: Run CSI MQTT client in background thread.
-• MQTTManager: Main class for managing MQTT connections and message handling.
-"""
-
 import autorootcwd
 import time
 from flask_socketio import SocketIO
@@ -20,7 +9,6 @@ from demo.config.settings import (
     BROKER_ADDR, BROKER_PORT, CSI_TOPICS
 )
 
-# === MQTT background thread ===
 def start_csi_mqtt_thread(message_handler, topics=None, broker_address=None, broker_port=None, daemon=True):
     """
     Run CSI MQTT client in background thread.
@@ -73,8 +61,6 @@ class MQTTManager:
         self.trigger_cli.subscribe("ptz/trigger")
         self.trigger_cli.loop_start()
 
-      
-        # --- NEW: Trigger state management ------------------------
         self._last_trigger_state = 0   # 0=OFF, 1=ON
         self._last_activity_time = 0.0 # Recent flag>0 time
         self._off_delay_sec = 2.0      # OFF transmission delay after inactivity

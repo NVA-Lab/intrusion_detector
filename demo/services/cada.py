@@ -34,7 +34,7 @@ class CADAService:
                 window_size=CSI_WINDOW_SIZE,
                 stride=CSI_STRIDE,
                 small_win_size=CSI_SMALL_WIN_SIZE,
-                threshold_factor=2.5,
+                threshold_factor=2.8,
             ) for topic in CSI_TOPIC
         }
 

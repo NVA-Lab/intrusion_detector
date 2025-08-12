@@ -11,7 +11,17 @@ class PTZService:
         self.publisher = None
         self.controller = None
         self._initialized = False
+
+    def reset(self):
+        if not self._initialized:
+            return
+        self.publisher.publish("pan", PTZ_INIT_PAN)
+        self.publisher.publish("tilt", PTZ_INIT_TILT)
         
+        self.controller.pan = PTZ_INIT_PAN
+        self.controller.tilt = PTZ_INIT_TILT
+        print("[PTZ] PTZ reset")
+
     def initialize(self, frame_width: int, frame_height: int):
         if self._initialized:
             return
@@ -45,4 +55,8 @@ class PTZService:
         return self.controller
         
     def get_publisher(self):
-        return self.publisher 
+        return self.publisher
+        
+    def sync_controller_state(self, pan: int, tilt: int):
+        if self.controller:
+            self.controller.sync_state(pan, tilt) 

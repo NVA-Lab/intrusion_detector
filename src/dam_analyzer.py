@@ -30,10 +30,12 @@ class DAMAnalyzer:
         
         # 기본 프롬프트
         self.prompt = (
-            "Video: <image><image><image><image><image><image><image><image>\n"
-            "Return **one concise English sentence** that describes ONLY the subject's action or state change. "
-            "Do NOT mention appearance, colour, clothing, background, objects, or physical attributes."
-        )
+        "Video: <image><image><image><image><image><image><image><image>\n"
+        "주체의 행동이나 상태 변화에만 집중하여 한국어로 간결한 한 문장을 반환하세요. "
+        "외모, 색상, 의류, 배경, 사물, 신체적 특징은 언급하지 마세요. "
+        "'쓰러짐', '넘어짐', '손 흔들기' 등의 키워드를 적극적으로 사용하세요. "
+        "'누워있는', '웅크리고 있는' 등의 표현은 '쓰러진', '넘어진'으로 바꿔서 설명하세요."
+    )
         
         # TensorRT 초기화 시도
         if self.use_tensorrt:
