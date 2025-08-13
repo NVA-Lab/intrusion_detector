@@ -1,6 +1,179 @@
-2025-06-18 15:23:05	 A dark, soft fabric, likely a sweater, is draped in a relaxed, slightly crumpled manner, suggesting a casual, unstructured form.
-2025-06-18 15:24:04	 A person is standing with their hands in their pockets.
-2025-06-18 15:24:13	 A person is standing with their right arm slightly bent and their left arm hanging down.
-2025-06-18 15:24:47	 A cup of coffee with a straw is being held by a person.
-2025-06-18 15:34:24	 A person is sitting down, with their arms resting on a surface in front of them.
-2025-06-18 15:34:36	 The girl is sitting in a chair with a neutral expression on her face.
+2025-07-17 11:13:38	 A person is standing and waving with their right hand.
+2025-07-17 11:14:07	 A person is crouched down, appearing to be engaged in an activity that involves reaching towards the floor.
+2025-07-17 11:14:18	 A person is standing in front of a desk, with their body slightly turned to the side.
+2025-07-17 13:08:43	 A person is bending down, looking at something on the ground.
+2025-07-17 13:09:09	 A person is typing on a laptop.
+2025-07-17 13:09:18	 A person is standing in a room with a light-colored floor.
+2025-07-17 13:20:05	 A person is standing and looking at a laptop.
+2025-07-17 13:20:31	 A person is standing in front of a door, holding a black bag in their left hand.
+2025-07-17 13:20:42	 A person is standing and appears to be engaged in an activity, possibly interacting with another person or object in front of them.
+2025-07-17 13:20:52	 A person is sitting down.
+2025-07-17 14:18:38	 A person is leaning forward with their arms resting on a surface, appearing to be in a relaxed or contemplative posture.
+2025-07-17 14:36:50	 A person is standing with their back to the viewer, arms outstretched, and appears to be in a relaxed or playful stance.
+2025-07-17 14:37:48	 A rectangular, dark-colored object is positioned horizontally in the center of the image.
+2025-07-17 14:50:43	 A person is standing still, facing away, with their back to the viewer.
+2025-07-17 14:50:58	 A person is leaning forward, with their head slightly tilted downward, suggesting they are focused on something in front of them.
+2025-07-17 14:51:13	 A person is standing and appears to be looking at something in front of them.
+2025-07-17 14:51:23	 A person is leaning forward, with their head slightly tilted downward.
+2025-07-17 14:53:33	 A white pipe is wrapped with a white cable, which is connected to a white device.
+2025-07-17 15:23:27	 A person is standing and waving with their right hand.
+2025-07-17 15:23:50	 A person is lying on the floor with their legs extended, wearing dark pants and black shoes.
+2025-07-17 15:23:59	 A person is lying on the ground with their arms extended forward.
+2025-07-17 15:31:21	 A person is bending down, looking at something on the ground.
+2025-07-17 15:40:13	 A person is standing with their body slightly tilted to one side, raising their right arm upwards.
+2025-07-17 15:40:36	 A person is lying on their back on a mat, with their legs bent and feet flat on the ground.
+2025-07-17 15:40:49	 A person is walking forward, with their right arm slightly bent and their left arm hanging down.
+2025-07-17 16:01:02	 A person is leaning forward with their right hand resting on a chair.
+2025-07-17 16:01:38	 A person is standing with their hand in their pocket.
+2025-07-17 16:02:00	 A person is holding a small object in their hands, which they are examining closely.
+2025-07-17 16:02:35	 A person is leaning forward, with their right arm extended towards a laptop, as if interacting with it.
+2025-07-17 16:06:37	 A white, cylindrical object is wrapped with a white rope, positioned horizontally.
+2025-07-17 16:07:31	 A white, cylindrical object is positioned horizontally, with a smooth, glossy surface. It appears to be a pipe or conduit, with a consistent diameter throughout its visible length. The object is wrapped with a white band, possibly for reinforcement or identification.
+2025-07-17 16:09:28	 A person is standing with their head down, wearing a dark shirt and black sandals.
+2025-07-17 16:09:58	 A person is standing with their head down, looking at the floor.
+2025-07-17 16:13:38	 A person is standing with their feet apart, wearing black sandals and black pants.
+2025-07-17 16:15:47	 The person is standing still, with their arms relaxed by their sides.
+2025-07-17 16:16:06	 The person is standing still, with their body slightly angled to the side.
+2025-07-17 16:17:05	 The person is standing with their feet slightly apart, wearing black sandals and black pants.
+2025-07-17 16:17:17	 A person is standing still, wearing black pants and black sandals with white socks.
+2025-07-17 16:17:38	 A person is standing and looking at a cell phone, with their hands holding the phone.
+2025-07-17 16:28:01	 A person is bending over, reaching towards a surface with their right hand.
+2025-07-17 16:28:33	 A person is crouching down, reaching towards a laptop on the floor.
+2025-07-17 16:28:46	 A person is crouching down, with their right leg bent and their left leg extended behind them.
+2025-07-17 16:28:56	 A person is bending forward with their right arm extended downward, touching the ground.
+2025-07-17 16:29:21	 A person is bending forward with their head down, appearing to be focused on something in front of them.
+2025-07-17 16:30:31	 A person is standing and waving with their right hand.
+2025-07-17 16:30:41	 A person is standing still, with their body slightly angled to the side.
+2025-07-17 16:31:14	 A person is sitting on a chair, with their hands clasped together in their lap.
+2025-07-17 16:33:56	 A white, cylindrical object is positioned horizontally, with a smooth, glossy surface. It appears to be a lamp or light fixture, with a slightly tapered end. The object is connected to a white, rectangular base with a smooth finish, and there are visible cables or wires attached to it.
+2025-07-17 16:34:05	 A person is walking, wearing dark pants and white shoes.
+2025-07-17 16:37:37	 A person is crouching down, with their right hand touching their right knee.
+2025-07-17 16:38:02	 A person is crouching down with their right arm extended forward.
+2025-07-17 16:38:30	 A person is bending forward, with their right arm extended downward.
+2025-07-17 16:41:12	 A person is sitting on a chair, holding a cell phone in their right hand, and appears to be looking at the screen.
+2025-07-17 16:46:52	 A chair is being pushed.
+2025-07-17 16:47:08	 A black office chair with a mesh backrest and armrests is positioned upright.
+2025-07-17 16:49:14	 A person is sitting on a chair, with their legs crossed and feet resting on the ground.
+2025-07-17 16:49:28	 A chair is being pushed away from the table.
+2025-07-17 16:51:04	 A chair is being pushed.
+2025-07-17 16:55:58	 A person is leaning over a laptop, typing on the keyboard.
+2025-07-17 16:59:24	 A person is standing with their hand on their hip, looking downward.
+2025-07-17 17:02:15	 A man stands with his arms crossed, looking downward.
+2025-07-17 17:03:05	 A person is walking, with their right leg forward and left leg back, wearing a white shirt and dark pants.
+2025-07-17 17:03:15	 A person is standing with their body slightly leaning to one side, with their left arm hanging down and their right arm resting on their hip.
+2025-07-17 17:05:37	 A white, cylindrical object is positioned horizontally, with a smooth surface and a consistent diameter throughout its visible length.
+2025-07-17 17:06:42	 A person is walking, with their right leg forward and left leg back, wearing dark pants and light-colored shoes.
+2025-07-17 17:07:19	 A person is walking, with their right leg forward and left leg back, wearing a white shirt and dark pants.
+2025-07-17 17:08:59	 A person is standing and holding a small object in their right hand, which is raised slightly.
+2025-07-17 17:14:17	 A person is standing still, with their feet firmly planted on the ground.
+2025-07-17 17:14:29	 A person is standing and looking at a handheld device, possibly a cell phone, with their hands in their pockets.
+2025-07-17 17:26:35	 A person is standing and raising their right hand.
+2025-07-17 17:28:11	 A person is sitting down, with their legs crossed and hands resting on their knees.
+2025-07-17 17:29:57	 A person is standing with their right hand raised to their face, appearing to be in a thoughtful or contemplative pose.
+2025-07-17 17:30:20	 A person is lying on their back on a mat, with their legs extended and arms resting on the mat.
+2025-07-17 17:30:45	 A person is walking through a doorway, moving from the left to the right side of the frame.
+2025-07-17 17:35:49	 A person is standing with their arms outstretched, appearing to be in a relaxed or playful stance.
+2025-07-17 17:39:35	 The person is standing still with their arms relaxed by their sides.
+2025-07-17 17:39:48	 A person is standing still, facing away, with their head slightly turned to the left.
+2025-07-17 17:41:08	 A person wearing a purple shirt and dark pants is standing and moving their right arm upward.
+2025-07-17 17:41:32	 A person is standing in front of a door, slightly leaning forward.
+2025-07-17 17:42:31	 A black suitcase is being pulled out of a closet.
+2025-07-17 17:42:45	 A person is standing in front of a white wall with a black vertical strip.
+2025-07-17 17:47:04	 A person is standing still, facing to the right, with their head slightly turned to the left.
+2025-07-17 17:47:15	 A person is standing still, facing to the right, with their head slightly turned to the left.
+2025-07-17 17:47:37	 A person is standing still, facing away, with their head slightly turned to the left.
+2025-07-17 17:48:48	 A person is standing with their right arm extended outward.
+2025-07-17 18:10:16	 A person is sitting down.
+2025-07-17 18:10:27	 A person is standing in front of a desk, with their right arm bent and hand near their face.
+2025-07-17 18:10:42	 A person is bending forward, with their right arm extended downward.
+2025-07-17 18:11:00	 A person is walking away, wearing a black jacket with a hood.
+2025-07-17 18:11:11	 A person is lying on the ground with their arms outstretched and legs stretched out.
+2025-07-17 18:11:32	 A person is lying on the ground with their arms crossed over their chest.
+2025-07-17 18:11:43	 A person is lying on their back with their arms and legs spread out, appearing relaxed and at ease.
+2025-07-17 18:11:54	 A person is lying on the ground with their legs spread out and arms resting by their sides.
+2025-07-17 18:12:05	 A person is crouched down on the floor, with their right hand touching the ground and their left hand resting on their knee.
+2025-07-17 18:12:16	 A person is standing still, facing away, with their back to the viewer.
+2025-07-17 18:12:28	 A person is kneeling on the floor, leaning forward with their head down, and appears to be focused on something in front of them.
+2025-07-17 18:12:39	 A person is lying on the ground, curled up with their head resting on their hand, and their legs bent at the knees.
+2025-07-17 18:13:27	 A person is standing in front of a desk with a computer monitor on it.
+2025-07-17 18:14:09	 A person is standing still, wearing a dark shirt and dark pants, with a watch on their left wrist.
+2025-07-17 18:14:21	 A person is lying on their back with their head resting on their hands, eyes closed, and wearing dark clothing and shoes.
+2025-07-17 18:14:50	 A person is standing with their hands on their hips, looking down.
+2025-07-18 09:41:53	 A person is standing with their back to the viewer, wearing a grey shirt and blue pants, with their right hand in their pocket.
+2025-07-18 09:45:20	 A person is standing in a room with a white ceiling and walls.
+2025-07-18 09:48:07	 A person is standing in front of a computer screen, facing slightly to the right.
+2025-07-18 09:48:18	 A person is standing in front of a desk, with their right arm extended towards the desk surface.
+2025-07-18 09:48:27	 A person is standing still, with their body slightly angled to the side.
+2025-07-18 09:49:30	 A person is standing with their back to the viewer, wearing a dark shirt and a watch on their left wrist.
+2025-07-18 09:49:40	 A person is standing with their back to the viewer, wearing a dark shirt and dark pants.
+2025-07-18 09:49:50	 A person is standing in front of a white wall, wearing a white shirt and dark pants.
+2025-07-18 09:55:44	 A person is standing and waving with their right hand.
+2025-07-18 09:56:06	 A person is kneeling on the ground, with their right arm extended forward and their left arm bent at the elbow.
+2025-07-18 09:56:16	 A person is lying on their back with their arms extended and legs bent.
+2025-07-18 09:57:35	 A person is walking, holding a phone in their right hand.
+2025-07-18 09:58:52	 A person is crouching down with their right arm extended forward and their left leg bent at the knee.
+2025-07-18 09:59:02	 A person is lying on the ground with arms and legs spread out.
+2025-07-18 09:59:31	 A black, elongated object is positioned diagonally across a surface, with a small, circular metallic component visible near its lower edge.
+2025-07-18 09:59:43	 A person is seen through a narrow opening, with their arm visible, suggesting they are reaching or interacting with something just beyond the frame.
+2025-07-18 09:59:53	 A door is slightly ajar, with a small gap revealing a dark interior.
+2025-07-18 10:02:00	 A person is standing with their back to the viewer, looking upwards.
+2025-07-18 10:02:29	 A person is standing with their back to the viewer, with their right hand resting on their hip and their left arm bent at the elbow, holding an object.
+2025-07-18 10:02:54	 A person is standing and holding a camera, looking at the screen.
+2025-07-18 10:03:04	 A person is standing and holding a small object in their hand.
+2025-07-18 10:07:38	 A person is standing and making a gesture with their right hand, as if pointing or waving.
+2025-07-18 10:07:48	 A person is standing with their body slightly turned to the side, looking upwards.
+2025-07-18 10:08:00	 A person is walking forward with a slight lean, arms relaxed by their sides.
+2025-07-18 10:08:10	 A person is lying on their back with their arms extended above their head.
+2025-07-18 10:38:35	 A person is standing and waving with their right hand.
+2025-07-18 10:38:47	 A person is standing with their body slightly turned to the side, with their right arm raised and bent at the elbow, and their left arm hanging down.
+2025-07-18 10:39:00	 A young man with short black hair, wearing a dark purple shirt and black pants, is walking forward with a slight lean to his right.
+2025-07-18 10:39:11	 A person is lying on the ground with their arms extended outward.
+2025-07-18 10:57:25	 A person is crouching down, transitioning from standing to a kneeling position.
+2025-07-18 10:57:35	 A person is lying on the ground with their arms extended and legs stretched out.
+2025-07-18 10:57:55	 A person is walking forward with their right arm slightly bent and their left arm hanging down.
+2025-07-18 11:30:47	 A man in a dark shirt and black pants is standing and holding his right hand near his face, as if he is about to take a sip from a cup.
+2025-07-18 11:31:11	 A person is kneeling down, with their right arm extended forward and their left arm bent at the elbow.
+2025-07-18 11:31:22	 A person is lying on their back with their arms extended and legs bent, appearing to be in a relaxed or playful pose.
+2025-07-18 11:44:27	 A person is holding a small object in their right hand, which is slightly raised and bent at the elbow.
+2025-07-18 11:44:39	 A person is holding a small object with both hands, appearing to be focused on it.
+2025-07-18 11:44:50	 A person is leaning forward with their back facing the viewer, suggesting they are engaged in an activity that requires focus or attention.
+2025-07-18 11:45:12	 A person is leaning forward with their back facing the viewer, suggesting they are looking at something in front of them.
+2025-07-18 11:45:23	 A person is leaning forward with their right arm bent at the elbow, resting on a surface.
+2025-07-18 11:45:34	 The person is slightly leaning forward, with their right arm bent and resting on their hip.
+2025-07-18 11:45:46	 The person is wearing a grey shirt and dark pants. They are holding a small object in their right hand, which is slightly raised.
+2025-07-18 11:46:00	 A person is bending forward, with their right arm extended downward.
+2025-07-18 11:46:11	 A person is sitting down, with their right arm resting on their lap.
+2025-07-18 11:46:39	 A person is holding a small object with both hands, appearing to be focused on it.
+2025-07-18 11:46:49	 A person is holding a small object with both hands, appearing to be focused on it.
+2025-07-18 11:47:00	 A person is bending forward, with their right arm extended downward.
+2025-07-18 11:47:11	 A man is walking with a slight forward lean, his right arm bent at the elbow and his left arm hanging down.
+2025-07-18 11:47:29	 A person is leaning forward with their right arm bent at the elbow, resting on a surface.
+2025-07-18 11:47:40	 A person is holding a small object in their right hand, which is slightly bent at the elbow.
+2025-07-18 11:47:51	 A person is holding a small object with both hands, appearing to be focused on it.
+2025-07-18 11:48:02	 A person is holding a small object with both hands, appearing to be focused on it.
+2025-07-18 11:48:31	 A person is holding a book with both hands, appearing to be focused on reading or studying.
+2025-07-18 11:48:42	 A person is holding a book with both hands, appearing to be engaged in reading or studying.
+2025-07-18 11:49:02	 A person is leaning forward, holding a book with both hands, appearing to be reading or studying.
+2025-07-18 11:49:13	 A person is holding a small object with both hands, appearing to be focused on it.
+2025-07-18 11:49:24	 The person is holding a laptop with both hands, appearing to be engaged in an activity on the screen.
+2025-07-18 11:49:33	 A person is sitting down, holding a book in their lap.
+2025-07-18 11:49:42	 A person is standing in front of a mirror, looking at their reflection.
+2025-07-18 15:59:27	 The woman is standing with her arms slightly away from her body, and she appears to be looking at the camera.
+2025-07-23 10:29:06	 A person is standing in front of a mirror, looking at their reflection.
+2025-07-23 11:10:42	 A person is standing with their arms relaxed by their sides.
+2025-07-23 11:20:31	 A person is standing upright, facing forward.
+2025-07-25 10:47:34	 A person is walking forward, wearing a light purple shirt and white pants.
+2025-07-25 10:57:15	 A person is standing and raising their right hand.
+2025-07-25 10:58:04	 A person is standing in front of a wall, with their body slightly angled to the side.
+2025-07-25 10:58:44	 A white, cylindrical object is positioned horizontally, with a smooth surface and a consistent diameter throughout its visible length.
+2025-08-01 12:38:27	 A person is walking forward, moving steadily and purposefully.
+2025-08-01 12:41:46	 A person is standing in front of a wall, with their body slightly turned to the side.
+2025-08-01 12:42:25	 A person is turning their head to the side.
+2025-08-01 12:42:49	 A person is moving from the left to the right side of the frame.
+2025-08-01 12:46:41	 A person is standing with their back to the viewer, wearing a dark top and white pants.
+2025-08-01 12:47:29	 A white power strip with multiple outlets is plugged in, with several cords connected to it.
+2025-08-01 12:48:38	 A person is reaching for something on a counter.
+2025-08-01 12:52:50	 A person is adjusting their clothing, focusing on the task at hand.
+2025-08-01 13:03:18	 A man is standing in front of a mirror, looking at his reflection.
+2025-08-01 13:03:46	 A person is sitting down, with their legs crossed and hands resting on their knees.
+2025-08-01 13:03:56	 A person is standing with their back to the viewer, wearing a dark-colored outfit.

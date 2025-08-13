@@ -13,11 +13,11 @@ class PTZController:
         hfov: float = 58.0, vfov: float = 41.0,
         pan_dir: int = -1, tilt_dir: int = +1,
         deadzone_px: int = 6,
-        max_step: float = 2.0,
-        send_ivl_s: float = 0.12,
-        smooth_alpha: float = 0.20,
-        min_step_deg: float = 0.05,
-        gain_scale: float = 0.6,
+        max_step: float = 40.0,        # ← 20 → 40
+        send_ivl_s: float = 0.06,      # ← 0.12 → 0.06
+        smooth_alpha: float = 0.50,    # ← 0.20 → 0.50
+        min_step_deg: float = 0.15,    # ← 0.30 → 0.15
+        gain_scale: float = 0.9,  
     ):
         self.pub = publisher
         self.w, self.h = frame_wh
@@ -84,3 +84,8 @@ class PTZController:
                 self.tilt = target
                 self.pub.publish("tilt", self.tilt)
                 self.last_sent = now
+
+    def sync_state(self, pan: int, tilt: int):
+        self.pan = pan
+        self.tilt = tilt
+        #print(f"[PTZ] Controller state synced: pan={pan}, tilt={tilt}")

@@ -1,61 +1,364 @@
 <!doctype html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <title>Human Detection & CSI Activity</title>
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-2.24.2.min.js"></script>
   <style>
-    body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #eef2f5; }
-    .wrap { display: flex; height: 100vh; }
-    .left-col { flex: 2; display: flex; flex-direction: column; }
-    .video-box { flex: 5 1 0; background: #000; display: flex; justify-content: center; align-items: center; position: relative; }
-    .video-box img { max-width: 100%; max-height: 100%; border-radius: 8px; }
-    .panel { flex: 1; padding: 30px; background: #fff; box-shadow: -2px 0 8px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 20px; }
-    .btn { padding: 12px; font-size: 16px; border: none; border-radius: 4px; background: #4a90e2; color: #fff; cursor: pointer; }
-    .btn:hover { background: #357abd; }
-    .status { display: flex; align-items: center; gap: 10px; font-size: 18px; }
-    .dot { width: 14px; height: 14px; border-radius: 50%; background: #e74c3c; transition: background .3s; }
-    .tracking .dot { background: #2ecc71; }
-    .log { flex: 1; background: #f7f9fb; border: 1px solid #ddd; border-radius: 4px; padding: 10px; overflow-y: auto; font-size: 14px; }
-    .log-entry { display: flex; align-items: center; gap: 8px; padding: 8px; margin-bottom: 6px; background: #fff; border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-    .log-entry .ts { font-family: monospace; font-size: 12px; color: #888; min-width: 60px; }
-    .plot-box { flex: 5 1 0; background:#fafbfc; border:1px solid #ddd; border-radius:4px; display:flex; }
-    .plot-box img { width:100%; height:auto; max-height:100%; object-fit:contain; }
-    #plots { flex:1; width:100%; height:100%; }
-    .alert-overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,0,0,0.6); opacity:0; pointer-events:none; transition:opacity 0.15s ease; }
-    .alert-overlay.active { opacity:1; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #eef2f5;
+    }
+
+    .wrap {
+      display: flex;
+      height: 100vh;
+    }
+
+    .left-col {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .video-box {
+      flex: 5 1 0;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .video-box img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 8px;
+    }
+
+    .panel {
+      flex: 1;
+      padding: 30px;
+      background: #fff;
+      box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .btn {
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      background: #4a90e2;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #357abd;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #e74c3c;
+      transition: background .3s;
+    }
+
+    .tracking .dot {
+      background: #2ecc71;
+    }
+
+    .log {
+      flex: 1;
+      background: #f7f9fb;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+
+    .zones-container {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .zone-box {
+      background: #f0f0f0;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .zone-box.active {
+      background: #ff6b6b;
+      color: white;
+      border-color: #e74c3c;
+    }
+
+    .control-room {
+      background: #2c3e50;
+      color: white;
+      border: 2px solid #34495e;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 4px;
+      padding: 12px 0;
+    }
+
+    .door {
+      background: #8b4513;
+      color: white;
+      border: 2px solid #654321;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 4px;
+      width: 40%;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 10px 0;
+    }
+
+    .camera-indicator {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 4px 0;
+    }
+
+    .camera-dot {
+      width: 16px;
+      height: 16px;
+      background: #e74c3c;
+      border-radius: 50%;
+      margin-bottom: 6px;
+    }
+
+    .camera-label {
+      font-size: 14px;
+      color: #666;
+      font-weight: bold;
+    }
+
+    .log-entry {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      margin-bottom: 6px;
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .log-entry .ts {
+      font-family: monospace;
+      font-size: 12px;
+      color: #888;
+      min-width: 60px;
+    }
+
+    .plot-box {
+      flex: 5 1 0;
+      background: #fafbfc;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      display: flex;
+    }
+
+    .plot-box img {
+      width: 100%;
+      height: auto;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    #plots {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+    }
+
+    .alert-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 0, 0, 0.6);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+    }
+
+    .alert-overlay.active {
+      opacity: 1;
+    }
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 800px;
+    max-height: 80vh;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  .modal-title {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    color: #666;
+  }
+
+  .modal-body {
+    height: 400px;
+  }
+
+  .zone-box {
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .zone-box:hover {
+    background: #e0e0e0;
+    transform: scale(1.05);
+  }
   </style>
 </head>
+
 <body>
+  <div class="modal-overlay" id="graph-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-zone-title">Zone 정보</div>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="modal-plot"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="wrap">
     <div class="left-col">
       <div class="video-box">
         <img src="{{ url_for('video_feed') }}" />
         <div id="alert-overlay" class="alert-overlay"></div>
       </div>
-      <div class="plot-box"><div id="plots"></div></div>
+      <div class="plot-box">
+        <div id="plots"></div>
+      </div>
     </div>
     <div class="panel">
-      <button class="btn" onclick="requestRedetect()">재검출</button>
+      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <button class="btn" onclick="requestReset()">카메라 리셋</button>
+        <button class="btn" onclick="requestRedetection()">사람 재검출</button>
+      </div>
       <div id="status" class="status waiting">
         <div class="dot"></div>
-        <div class="text">Waiting for human</div>
+        <div class="text">Detection 모드</div>
       </div>
       <div id="alert-log" class="log"></div>
+      <div class="control-room">상황실</div>
+      <div class="zones-container">
+        <div class="zone-box" id="zone-2" onclick="showZoneGraph(2)">Zone 2</div>
+        <div class="zone-box" id="zone-1" onclick="showZoneGraph(1)">Zone 1</div>
+        <div class="zone-box" id="zone-4" onclick="showZoneGraph(4)">Zone 4</div>
+        <div class="zone-box" id="zone-3" onclick="showZoneGraph(3)">Zone 3</div>
+        <div class="zone-box" id="zone-6" onclick="showZoneGraph(6)">Zone 6</div>
+        <div class="zone-box" id="zone-5" onclick="showZoneGraph(5)">Zone 5</div>
+      </div>
+      <div class="camera-indicator">
+        <div class="camera-dot"></div>
+        <div class="camera-label">카메라</div>
+      </div>
+      <div class="door">출입문</div>
     </div>
   </div>
 
   <script>
-    function updateStatus(code) {
+    function updateStatus(codeOrMode) {
       const status = document.getElementById("status");
-      const text   = status.querySelector(".text");
-      if (code === "00" || code === "01") {
-        status.classList.add("tracking");
-        text.textContent = "Human Tracking";
-      } else if (code === "02") {
+      const text = status.querySelector(".text");
+
+      // 알림 코드에 따른 상태 업데이트
+      if (codeOrMode === "00" || codeOrMode === "detection") {
+        // 시스템 시작 또는 Detection 모드
         status.classList.remove("tracking");
-        text.textContent = "Waiting for human";
+        text.textContent = "Detection 모드";
+      } else if (codeOrMode === "01" || codeOrMode === "tracking") {
+        // 사람 감지 또는 Tracking 모드
+        status.classList.add("tracking");
+        text.textContent = "Tracking 모드";
+      } else if (codeOrMode === "02" || codeOrMode === "csi") {
+        // 사람 손실 또는 CSI 모드
+        status.classList.remove("tracking");
+        text.textContent = "CSI 모드";
+      } else if (codeOrMode === "03") {
+        // 정지 행동 - Tracking Mode 유지
+        status.classList.add("tracking");
+        text.textContent = "Tracking 모드";
+      } else if (codeOrMode === "04") {
       }
     }
 
@@ -81,13 +384,53 @@
     }
 
     // --- Alerts (SSE) -------------------------------------------------
-    const alertEvt = new EventSource("/alerts");
-    alertEvt.onmessage = e => {
-      if (!e.data.trim()) return;
-      const { code, message } = JSON.parse(e.data);
-      addLogEntry(code, message);
-      updateStatus(code);
-    };
+    let alertEvt = null;
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 5;
+
+    function connectAlerts() {
+      try {
+        alertEvt = new EventSource("/alerts");
+
+        alertEvt.onmessage = e => {
+          if (!e.data.trim()) return;
+          try {
+            const { code, message } = JSON.parse(e.data);
+            addLogEntry(code, message);
+            updateStatus(code);
+          } catch (error) {
+            console.error("Alert parsing error:", error);
+          }
+        };
+
+        alertEvt.onerror = e => {
+          console.error("SSE connection error:", e);
+          alertEvt.close();
+          reconnectAlerts();
+        };
+
+        alertEvt.onopen = e => {
+          console.log("SSE connection established");
+          reconnectAttempts = 0;
+        };
+
+      } catch (error) {
+        console.error("Failed to create EventSource:", error);
+        reconnectAlerts();
+      }
+    }
+
+    function reconnectAlerts() {
+      if (reconnectAttempts < maxReconnectAttempts) {
+        reconnectAttempts++;
+        console.log(`Reconnecting alerts... (${reconnectAttempts}/${maxReconnectAttempts})`);
+        setTimeout(connectAlerts, 200);
+      } else {
+        console.error("Max reconnection attempts reached");
+      }
+    }
+
+    connectAlerts();
 
     // --- Analysis Results Handler ------------------------------------------
     async function handleAnalysisResult(event) {
@@ -100,56 +443,244 @@
 
     // --- CSI Plot (SocketIO + Plotly) ---------------------------------
     const socket = io("/csi");
-    const gd     = document.getElementById("plots");
-    const trMap  = {};             // topic → {act, thr, flag}
+    const gd = document.getElementById("plots");
+    const trMap = {};             // topic → {act, thr, flag}
     const MAXPTS = 500;
+    
+    // Zone별 ESP 토픽 매핑
+    const zoneTopics = {
+      1: "L0382/ESP/1",
+      2: "L0382/ESP/2",
+      3: "L0382/ESP/3",
+      4: "L0382/ESP/4",
+      5: "L0382/ESP/5",
+      6: "L0382/ESP/6",
+      7: "L0382/ESP/7",
+      8: "L0382/ESP/8"
+    };
+    
+    // 현재 구독 중인 토픽
+    let currentTopic = "L0382/ESP/8";
 
     Plotly.newPlot(gd, [], {
-      title:"Waiting for data…",
-      xaxis:{title:"Time", type:"date"},
-      yaxis:{title:"Value"}
-    }, {responsive:true});
+      title: "CSI 활동 그래프",
+      xaxis: { title: "Time", type: "date" },
+      yaxis: { title: "Value" }
+    }, { responsive: true });
 
-    socket.on("cada_result", msg=>{
+    socket.on("cada_result", msg => {
       const t = msg.topic;
       const x = new Date(msg.timestamp_ms);
       const yA = msg.activity;
       const yT = msg.threshold;
       const yF = msg.flag;
 
-      if(!(t in trMap)){
-        const base = t.replaceAll("/","_");
-        const actTr = {x:[x],y:[yA],mode:"lines",name:`${base}_act`,line:{color:"#1f77b4"}};
-        const thrTr = {x:[x],y:[yT],mode:"lines",name:`${base}_thr`,line:{dash:"dot",color:"#ff7f0e"}};
-        const flgTr = {x:[x],y:[yF],mode:"lines",name:`${base}_flag`,line:{color:"#2ca02c"}};
-        const actIdx = gd.data.length;
-        const thrIdx = actIdx+1;
-        const flgIdx = actIdx+2;
-        Plotly.addTraces(gd,[actTr,thrTr,flgTr]);
-        trMap[t]={actIdx,thrIdx,flgIdx,lastFlag:yF};
-        Plotly.relayout(gd,{title:""});
-      }else{
-        const {actIdx,thrIdx,flgIdx}=trMap[t];
-        Plotly.extendTraces(gd,{x:[[x]],y:[[yA]]},[actIdx],MAXPTS);
-        Plotly.extendTraces(gd,{x:[[x]],y:[[yT]]},[thrIdx],MAXPTS);
-        Plotly.extendTraces(gd,{x:[[x]],y:[[yF]]},[flgIdx],MAXPTS);
-        
-        if(yF > 0 && trMap[t].lastFlag === 0) {
-          flashOverlay();
+      // 메인 그래프 업데이트 (기본 토픽 L0382/ESP/8에 대해서만)
+      if (t === currentTopic) {
+        if (!(t in trMap)) {
+          const base = t.replaceAll("/", "_");
+          
+          const actTr = { x: [x], y: [yA], mode: "lines", name: `CSI 신호`, line: { color: "#1f77b4" } };
+          const thrTr = { x: [x], y: [yT], mode: "lines", name: `임계값`, line: { dash: "dot", color: "#ff7f0e" } };
+          const flgTr = { x: [x], y: [yF], mode: "lines", name: `활동 감지`, line: { color: "#2ca02c" } };
+          const actIdx = gd.data.length;
+          const thrIdx = actIdx + 1;
+          const flgIdx = actIdx + 2;
+
+          Plotly.addTraces(gd, [actTr, thrTr, flgTr]);
+          trMap[t] = { actIdx, thrIdx, flgIdx, lastFlag: yF };
+          Plotly.relayout(gd, { title: `CSI 활동 감지 - ${t}` });
+        } else {
+          const { actIdx, thrIdx, flgIdx } = trMap[t];
+          Plotly.extendTraces(gd, { x: [[x]], y: [[yA]] }, [actIdx], MAXPTS);
+          Plotly.extendTraces(gd, { x: [[x]], y: [[yT]] }, [thrIdx], MAXPTS);
+          Plotly.extendTraces(gd, { x: [[x]], y: [[yF]] }, [flgIdx], MAXPTS);
+
+          if (yF > 0 && trMap[t].lastFlag === 0) {
+            flashOverlay();
+          }
+          trMap[t].lastFlag = yF;
         }
-        trMap[t].lastFlag = yF;
+      }
+      
+      // 모달 팝업 그래프 업데이트 (열려있는 경우에만)
+      if (currentZoneNumber !== null && t === zoneTopics[currentZoneNumber]) {
+        const modalPlot = document.getElementById('modal-plot');
+        
+        // 처음 데이터가 들어오는 경우 그래프 초기화
+        if (!(t in modalTopicData)) {
+          const actTr = { x: [x], y: [yA], mode: "lines", name: `CSI 신호`, line: { color: "#1f77b4" } };
+          const thrTr = { x: [x], y: [yT], mode: "lines", name: `임계값`, line: { dash: "dot", color: "#ff7f0e" } };
+          const flgTr = { x: [x], y: [yF], mode: "lines", name: `활동 감지`, line: { color: "#2ca02c" } };
+          
+          Plotly.addTraces(modalPlot, [actTr, thrTr, flgTr]);
+          modalTopicData[t] = { actIdx: 0, thrIdx: 1, flgIdx: 2, lastFlag: yF };
+          Plotly.relayout(modalPlot, { title: `Zone ${currentZoneNumber} - ${t} 활동 감지` });
+        } else {
+          try {
+            Plotly.extendTraces(modalPlot, 
+              { x: [[x]], y: [[yA]] }, 
+              [modalTopicData[t].actIdx], 
+              MAXPTS
+            );
+            Plotly.extendTraces(modalPlot, 
+              { x: [[x]], y: [[yT]] }, 
+              [modalTopicData[t].thrIdx], 
+              MAXPTS
+            );
+            Plotly.extendTraces(modalPlot, 
+              { x: [[x]], y: [[yF]] }, 
+              [modalTopicData[t].flgIdx], 
+              MAXPTS
+            );
+            
+            if (yF > 0 && modalTopicData[t].lastFlag === 0) {
+              // 모달 내에서도 활동 감지 시 시각적 표시를 할 수 있음
+            }
+            modalTopicData[t].lastFlag = yF;
+          } catch (err) {
+            console.log("모달 그래프 업데이트 오류:", err);
+          }
+        }
       }
     });
 
-    function requestRedetect() {
-      fetch("/redetect", { method: "POST" });
+    // Zone 상태 수신
+    socket.on("zone_status", function (zoneData) {
+      console.log("Zone status received:", zoneData);
+      updateZoneStatus(zoneData);
+    });
+
+    // 모드 상태 수신
+    socket.on("mode_status", function (modeData) {
+      console.log("Mode status received:", modeData);
+      if (modeData && modeData.mode) {
+        updateStatus(modeData.mode);
+      }
+    });
+
+    function requestReset() {
+      fetch("/reset", { method: "POST" });
+    }
+
+    function requestRedetection() {
+      fetch("/redetection", { method: "POST" });
     }
 
     const overlay = document.getElementById("alert-overlay");
-    function flashOverlay(){
+    function flashOverlay() {
       overlay.classList.add("active");
-      setTimeout(()=>overlay.classList.remove("active"), 500);
+      setTimeout(() => overlay.classList.remove("active"), 500);
     }
+
+    function activateZone(zoneNumber) {
+      for (let i = 1; i <= 6; i++) {
+        document.getElementById(`zone-${i}`).classList.remove('active');
+      }
+      if (zoneNumber >= 1 && zoneNumber <= 6) {
+        document.getElementById(`zone-${zoneNumber}`).classList.add('active');
+      }
+    }
+
+    const zoneCooldowns = {};
+    const zoneActiveFlags = {};
+
+    function updateZoneStatus(zoneData) {
+      const now = Date.now();
+
+      for (const [zoneKey, state] of Object.entries(zoneData)) {
+        if (state === "alert") {
+          const zoneNumber = parseInt(zoneKey.split('_')[1]);
+          if (zoneNumber >= 1 && zoneNumber <= 6) {
+            const lastActivation = zoneCooldowns[zoneNumber] || 0;
+            const isCurrentlyActive = zoneActiveFlags[zoneNumber] || false;
+
+            if ((now - lastActivation) > 3000 && !isCurrentlyActive) {
+              const zoneElement = document.getElementById(`zone-${zoneNumber}`);
+              zoneElement.classList.add('active');
+              zoneActiveFlags[zoneNumber] = true;
+
+              setTimeout(() => {
+                zoneElement.classList.remove('active');
+                zoneActiveFlags[zoneNumber] = false;
+              }, 1500);
+
+              zoneCooldowns[zoneNumber] = now;
+            }
+          }
+        }
+      }
+    }
+
+    // 팝업 모달 관련 함수
+    let currentZoneNumber = null;
+    let modalPlotData = {};
+    let modalTopicData = {};
+    
+    function showZoneGraph(zoneNumber) {
+      const modal = document.getElementById('graph-modal');
+      const modalTitle = document.getElementById('modal-zone-title');
+      const modalPlot = document.getElementById('modal-plot');
+      
+      // 현재 활성화된 존 번호 저장
+      currentZoneNumber = zoneNumber;
+      
+      // 제목 설정
+      modalTitle.textContent = `Zone ${zoneNumber} 그래프`;
+      
+      // 해당 Zone의 토픽 가져오기
+      const zoneTopic = zoneTopics[zoneNumber];
+      
+      // 모달 표시
+      modal.style.display = 'flex';
+      
+      // 새로운 그래프 데이터 초기화
+      const plotData = [];
+      const layout = {
+        title: `Zone ${zoneNumber} - ${zoneTopic} 활동 감지`,
+        xaxis: { title: "Time", type: "date" },
+        yaxis: { title: "Value" }
+      };
+      
+      // 모달 그래프 초기화
+      Plotly.newPlot(modalPlot, [], layout, { responsive: true });
+      
+      // 서버에 해당 Zone의 토픽 구독 요청
+      socket.emit('subscribe_topic', { topic: zoneTopic, zoneNumber: zoneNumber });
+      
+      // 모달 토픽 데이터 초기화
+      modalTopicData = {};
+      modalPlotData = {};
+    }
+    
+    function closeModal() {
+      const modal = document.getElementById('graph-modal');
+      modal.style.display = 'none';
+      
+      // 현재 구독 중인 Zone 토픽 구독 해제
+      if (currentZoneNumber !== null && zoneTopics[currentZoneNumber]) {
+        socket.emit('unsubscribe_topic', { topic: zoneTopics[currentZoneNumber] });
+      }
+      
+      currentZoneNumber = null;
+      modalPlotData = {};
+      modalTopicData = {};
+    }
+    
+    // ESC 키로 모달 닫기
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeModal();
+      }
+    });
+    
+    // 모달 외부 클릭 시 닫기
+    document.getElementById('graph-modal').addEventListener('click', function(event) {
+      if (event.target === this) {
+        closeModal();
+      }
+    });
   </script>
 </body>
-</html> 
+
+</html>

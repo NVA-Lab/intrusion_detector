@@ -6,21 +6,46 @@ from typing import Optional
 from demo.config.settings import STREAM_URL
 
 class FrameGrabber(threading.Thread):
+    RETRY_SEC = 0.7
+
     def __init__(self, url: str):
         super().__init__(daemon=True)
-        self.cap = cv2.VideoCapture(url, cv2.CAP_FFMPEG)
-        self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+        self.url  = url
+        self.cap  = None
         self.frame = None
         self.lock = threading.Lock()
         self.running = True
 
+    def _open_capture(self):
+        if self.cap is not None:
+            self.cap.release()
+            print("[Stream] Releasing previous capture")
+        self.cap = cv2.VideoCapture(self.url, cv2.CAP_FFMPEG)
+        if not self.cap.isOpened():
+            print(f"[Stream] Failed to open {self.url}")
+            return
+        self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+
     def run(self):
-        while self.running and self.cap.isOpened():
+        while self.running:
+            if self.cap is None or not self.cap.isOpened():
+                self._open_capture()
+                if not self.cap.isOpened():
+                    time.sleep(self.RETRY_SEC)
+                    continue
+
             ret, frm = self.cap.read()
-            if ret:
-                with self.lock:
-                    self.frame = frm
-        self.cap.release()
+            if not ret:
+
+                self.cap.release()
+                time.sleep(self.RETRY_SEC)
+                continue
+
+            with self.lock:
+                self.frame = frm
+
+        if self.cap:
+            self.cap.release()
 
     def read(self):
         with self.lock:
@@ -36,11 +61,14 @@ class StreamManager:
         self.stream_url = stream_url
         self.stream_active = False
         self.grabber: Optional[FrameGrabber] = None
+        # 생성자에서 자동으로 스트림 시작
+        self.start_stream()
         
     def start_stream(self):
         if not self.stream_active:
             self.grabber = FrameGrabber(self.stream_url)
             self.grabber.start()
+            print(f"[Stream] Starting stream from {self.stream_url}")
             self.stream_active = True
             
     def stop_stream(self):
@@ -60,6 +88,6 @@ class StreamManager:
     
     def get_blank_frame(self) -> np.ndarray:
         blank = np.zeros((480, 640, 3), dtype=np.uint8)
-        cv2.putText(blank, "Waiting for trigger...", (50, 240),
+        cv2.putText(blank, "Loading camera stream...", (50, 240),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 255, 255), 2)
         return blank

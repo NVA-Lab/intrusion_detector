@@ -2,7 +2,7 @@ from src.CADA.csi_buffer_utils import RealtimeCSIBufferManager
 from src.CADA.CADA_process import SlidingCadaProcessor, load_calibration_data
 from demo.utils.mqtt_manager import MQTTManager
 from demo.config.settings import (
-    CSI_TOPIC, CSI_WINDOW_SIZE, CSI_STRIDE, CSI_SMALL_WIN_SIZE,
+    CSI_TOPIC, CSI_TOPICS, CSI_WINDOW_SIZE, CSI_STRIDE, CSI_SMALL_WIN_SIZE,
     CSI_SUBCARRIERS, CSI_INDICES_TO_REMOVE, CSI_FPS_LIMIT,
     BROKER_ADDR, BROKER_PORT
 )
@@ -21,10 +21,11 @@ class CADAService:
         if self._initialized:
             return
             
-        self.buf_mgr = RealtimeCSIBufferManager(CSI_TOPIC)
-        load_calibration_data(CSI_TOPIC, self.buf_mgr.mu_bg_dict, self.buf_mgr.sigma_bg_dict)
+        # 모든 토픽을 구독하도록 변경
+        self.buf_mgr = RealtimeCSIBufferManager(CSI_TOPICS)
+        load_calibration_data(CSI_TOPICS, self.buf_mgr.mu_bg_dict, self.buf_mgr.sigma_bg_dict)
         
-        for topic in CSI_TOPIC:
+        for topic in CSI_TOPICS:
             self.buf_mgr.cada_ewma_states[topic] = 0.0
 
         self.sliding_processors = {
@@ -34,13 +35,13 @@ class CADAService:
                 window_size=CSI_WINDOW_SIZE,
                 stride=CSI_STRIDE,
                 small_win_size=CSI_SMALL_WIN_SIZE,
-                threshold_factor=2.5,
-            ) for topic in CSI_TOPIC
+                threshold_factor=2.8,
+            ) for topic in CSI_TOPICS
         }
 
         self.mqtt_manager = MQTTManager(
             socketio=self.socketio,
-            topics=CSI_TOPIC,
+            topics=CSI_TOPICS,  # 모든 토픽 구독
             broker_address=BROKER_ADDR,
             broker_port=BROKER_PORT,
             subcarriers=CSI_SUBCARRIERS,

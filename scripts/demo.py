@@ -136,7 +136,7 @@ def process_external_signals():
                     # 신호를 받았을 때만 카메라 초기화
                     if not camera_manager.is_initialized:
                         print("[CAMERA] 카메라 초기화 중...")
-                        if not camera_manager.initialize_camera("http://192.168.5.59:5001/video_feed"):
+                        if not camera_manager.initialize_camera("your-camera-url"):
                             print("[CAMERA] 카메라 초기화 실패 - 녹화를 건너뜁니다")
                             return
                         print("[CAMERA] 카메라 초기화 완료")
