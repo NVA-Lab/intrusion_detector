@@ -1,5 +1,6 @@
 import autorootcwd
 import time
+import numpy as np
 from flask_socketio import SocketIO
 from src.CADA.CADA_process import parse_and_normalize_payload
 import paho.mqtt.client as paho
@@ -73,6 +74,7 @@ class MQTTManager:
         now = time.time()
         prev_emit = self.time_last_emit.get(topic, 0.0)
 
+        # 기존 처리 방식은 그대로 유지
         parsed = parse_and_normalize_payload(
             payload, topic, self.subcarriers, self.indices_to_remove,
             self.buffer_manager.mu_bg_dict, self.buffer_manager.sigma_bg_dict)
@@ -82,25 +84,75 @@ class MQTTManager:
         self.buffer_manager.timestamp_buffer[topic].append(pkt_time)
         self.sliding_processors[topic].push(amp_z, pkt_time)
 
-        if not self.buffer_manager.cada_feature_buffers["activity_detection"][topic]:
-            return
-
-        idx = -1
-        activity = self.buffer_manager.cada_feature_buffers["activity_detection"][topic][idx]
-        flag = self.buffer_manager.cada_feature_buffers["activity_flag"][topic][idx]
-        threshold = self.buffer_manager.cada_feature_buffers["threshold"][topic][idx]
-        ts_ms = int(pkt_time.timestamp()*1000)
-
-        if (now - prev_emit) < 1.0/self.fps_limit:
-            return
-        self.time_last_emit[topic] = now
-
-        self.socketio.emit("cada_result", {
-            "topic": topic,
-            "timestamp_ms": ts_ms,
-            "activity": float(activity),
-            "flag": int(flag),
-            "threshold": float(threshold),
-        }, namespace="/csi")
+        # Raw CSI 데이터 추출
+        try:
+            # CSI 문자열에서 raw 데이터 추출
+            csi_data_str = payload.split("CSI values: ")[-1].strip()
+            csi_values = list(map(int, csi_data_str.split()))
+            
+            # 복소수 배열로 변환
+            csi_complex = [csi_values[i] + 1j * csi_values[i + 1]
+                          for i in range(0, len(csi_values), 2)]
+            csi_complex = np.array(csi_complex)[:self.subcarriers]
+            
+            # 노이즈 채널 제거
+            if self.indices_to_remove:
+                csi_complex = np.delete(csi_complex, self.indices_to_remove)
+            
+            # 실수부와 허수부를 분리
+            csi_real = np.real(csi_complex).tolist()
+            csi_imag = np.imag(csi_complex).tolist()
+            csi_amplitude = np.abs(csi_complex).tolist()
+            
+            ts_ms = int(pkt_time.timestamp()*1000)
+            
+            if (now - prev_emit) < 1.0/self.fps_limit:
+                return
+            self.time_last_emit[topic] = now
+            
+            # Raw 데이터와 기존 CADA 결과 함께 전송
+            if self.buffer_manager.cada_feature_buffers["activity_detection"][topic]:
+                idx = -1
+                activity = self.buffer_manager.cada_feature_buffers["activity_detection"][topic][idx]
+                flag = self.buffer_manager.cada_feature_buffers["activity_flag"][topic][idx]
+                threshold = self.buffer_manager.cada_feature_buffers["threshold"][topic][idx]
+                
+                self.socketio.emit("cada_result", {
+                    "topic": topic,
+                    "timestamp_ms": ts_ms,
+                    "activity": float(activity),
+                    "flag": int(flag),
+                    "threshold": float(threshold),
+                    "raw_amplitude": csi_amplitude,  # 진폭 추가
+                    "raw_real": csi_real,            # 실수부 추가
+                    "raw_imag": csi_imag,            # 허수부 추가
+                }, namespace="/csi")
+            else:
+                # CADA 결과가 없더라도 raw 데이터는 전송
+                self.socketio.emit("cada_result", {
+                    "topic": topic,
+                    "timestamp_ms": ts_ms,
+                    "raw_amplitude": csi_amplitude,  # 진폭 추가
+                    "raw_real": csi_real,            # 실수부 추가
+                    "raw_imag": csi_imag,            # 허수부 추가
+                }, namespace="/csi")
+                
+        except Exception as e:
+            print(f"[MQTT] Raw CSI 데이터 처리 오류: {e}")
+            # 오류 발생 시 기존 방식으로 데이터 전송
+            if self.buffer_manager.cada_feature_buffers["activity_detection"][topic]:
+                idx = -1
+                activity = self.buffer_manager.cada_feature_buffers["activity_detection"][topic][idx]
+                flag = self.buffer_manager.cada_feature_buffers["activity_flag"][topic][idx]
+                threshold = self.buffer_manager.cada_feature_buffers["threshold"][topic][idx]
+                ts_ms = int(pkt_time.timestamp()*1000)
+                
+                self.socketio.emit("cada_result", {
+                    "topic": topic,
+                    "timestamp_ms": ts_ms,
+                    "activity": float(activity),
+                    "flag": int(flag),
+                    "threshold": float(threshold),
+                }, namespace="/csi")
         # 문 열림 감지 관련 코드 제거
 

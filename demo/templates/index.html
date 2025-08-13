@@ -225,53 +225,11 @@
     .alert-overlay.active {
       opacity: 1;
     }
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-
-  .modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 80%;
-    max-width: 800px;
-    max-height: 80vh;
-    position: relative;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  }
-
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-
-  .modal-title {
-    font-size: 20px;
-    font-weight: bold;
-  }
-
-  .modal-close {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 0;
-    color: #666;
-  }
-
-  .modal-body {
-    height: 400px;
+  .zone-box.selected {
+    background: #4a90e2;
+    color: white;
+    border-color: #357abd;
+    transform: scale(1.05);
   }
 
   .zone-box {
@@ -287,17 +245,7 @@
 </head>
 
 <body>
-  <div class="modal-overlay" id="graph-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="modal-title" id="modal-zone-title">Zone 정보</div>
-        <button class="modal-close" onclick="closeModal()">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div id="modal-plot"></div>
-      </div>
-    </div>
-  </div>
+
 
   <div class="wrap">
     <div class="left-col">
@@ -447,7 +395,6 @@
     const trMap = {};             // topic → {act, thr, flag}
     const MAXPTS = 500;
     
-    // Zone별 ESP 토픽 매핑
     const zoneTopics = {
       1: "L0382/ESP/1",
       2: "L0382/ESP/2",
@@ -458,12 +405,11 @@
       7: "L0382/ESP/7",
       8: "L0382/ESP/8"
     };
-    
-    // 현재 구독 중인 토픽
-    let currentTopic = "L0382/ESP/8";
+
+    let currentTopic = null;
 
     Plotly.newPlot(gd, [], {
-      title: "CSI 활동 그래프",
+      title: "활동 감지 그래프",
       xaxis: { title: "Time", type: "date" },
       yaxis: { title: "Value" }
     }, { responsive: true });
@@ -471,87 +417,69 @@
     socket.on("cada_result", msg => {
       const t = msg.topic;
       const x = new Date(msg.timestamp_ms);
-      const yA = msg.activity;
-      const yT = msg.threshold;
-      const yF = msg.flag;
 
-      // 메인 그래프 업데이트 (기본 토픽 L0382/ESP/8에 대해서만)
-      if (t === currentTopic) {
+      if (currentTopic && t === currentTopic) {
         if (!(t in trMap)) {
-          const base = t.replaceAll("/", "_");
-          
-          const actTr = { x: [x], y: [yA], mode: "lines", name: `CSI 신호`, line: { color: "#1f77b4" } };
-          const thrTr = { x: [x], y: [yT], mode: "lines", name: `임계값`, line: { dash: "dot", color: "#ff7f0e" } };
-          const flgTr = { x: [x], y: [yF], mode: "lines", name: `활동 감지`, line: { color: "#2ca02c" } };
-          const actIdx = gd.data.length;
-          const thrIdx = actIdx + 1;
-          const flgIdx = actIdx + 2;
+          trMap[t] = { traces: {} };
 
-          Plotly.addTraces(gd, [actTr, thrTr, flgTr]);
-          trMap[t] = { actIdx, thrIdx, flgIdx, lastFlag: yF };
-          Plotly.relayout(gd, { title: `CSI 활동 감지 - ${t}` });
-        } else {
-          const { actIdx, thrIdx, flgIdx } = trMap[t];
-          Plotly.extendTraces(gd, { x: [[x]], y: [[yA]] }, [actIdx], MAXPTS);
-          Plotly.extendTraces(gd, { x: [[x]], y: [[yT]] }, [thrIdx], MAXPTS);
-          Plotly.extendTraces(gd, { x: [[x]], y: [[yF]] }, [flgIdx], MAXPTS);
-
-          if (yF > 0 && trMap[t].lastFlag === 0) {
-            flashOverlay();
-          }
-          trMap[t].lastFlag = yF;
-        }
-      }
-      
-      // 모달 팝업 그래프 업데이트 (열려있는 경우에만)
-      if (currentZoneNumber !== null && t === zoneTopics[currentZoneNumber]) {
-        const modalPlot = document.getElementById('modal-plot');
-        
-        // 처음 데이터가 들어오는 경우 그래프 초기화
-        if (!(t in modalTopicData)) {
-          const actTr = { x: [x], y: [yA], mode: "lines", name: `CSI 신호`, line: { color: "#1f77b4" } };
-          const thrTr = { x: [x], y: [yT], mode: "lines", name: `임계값`, line: { dash: "dot", color: "#ff7f0e" } };
-          const flgTr = { x: [x], y: [yF], mode: "lines", name: `활동 감지`, line: { color: "#2ca02c" } };
-          
-          Plotly.addTraces(modalPlot, [actTr, thrTr, flgTr]);
-          modalTopicData[t] = { actIdx: 0, thrIdx: 1, flgIdx: 2, lastFlag: yF };
-          Plotly.relayout(modalPlot, { title: `Zone ${currentZoneNumber} - ${t} 활동 감지` });
-        } else {
-          try {
-            Plotly.extendTraces(modalPlot, 
-              { x: [[x]], y: [[yA]] }, 
-              [modalTopicData[t].actIdx], 
-              MAXPTS
-            );
-            Plotly.extendTraces(modalPlot, 
-              { x: [[x]], y: [[yT]] }, 
-              [modalTopicData[t].thrIdx], 
-              MAXPTS
-            );
-            Plotly.extendTraces(modalPlot, 
-              { x: [[x]], y: [[yF]] }, 
-              [modalTopicData[t].flgIdx], 
-              MAXPTS
-            );
-            
-            if (yF > 0 && modalTopicData[t].lastFlag === 0) {
-              // 모달 내에서도 활동 감지 시 시각적 표시를 할 수 있음
+          let zoneNumber = null;
+          for (const [key, value] of Object.entries(zoneTopics)) {
+            if (value === t) {
+              zoneNumber = key;
+              break;
             }
-            modalTopicData[t].lastFlag = yF;
-          } catch (err) {
-            console.log("모달 그래프 업데이트 오류:", err);
+          }
+
+          Plotly.relayout(gd, { 
+            title: `Zone ${zoneNumber} - ${t} Raw CSI 데이터`,
+            yaxis: { title: "Amplitude" }
+          });
+          
+          if (msg.raw_amplitude) {
+            const traces = [];
+            const colors = [
+              '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', 
+              '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
+              '#aec7e8', '#ffbb78', '#98df8a', '#ff9896', '#c5b0d5',
+              '#c49c94', '#f7b6d2', '#c7c7c7', '#dbdb8d', '#9edae5'
+            ];
+
+            for (let i = 0; i < msg.raw_amplitude.length; i++) {
+              const colorIdx = i % colors.length;
+              const trace = { 
+                x: [x], 
+                y: [msg.raw_amplitude[i]], 
+                mode: 'lines', 
+                showlegend: false,
+                line: { color: colors[colorIdx], width: 1 }
+              };
+              traces.push(trace);
+              trMap[t].traces[i] = gd.data.length + i;
+            }
+
+            Plotly.addTraces(gd, traces);
+          }
+        } else {
+          if (msg.raw_amplitude && trMap[t].traces) {
+            for (let i = 0; i < msg.raw_amplitude.length; i++) {
+              if (trMap[t].traces[i] !== undefined) {
+                Plotly.extendTraces(gd, 
+                  { x: [[x]], y: [[msg.raw_amplitude[i]]] }, 
+                  [trMap[t].traces[i]], 
+                  MAXPTS
+                );
+              }
+            }
           }
         }
       }
     });
 
-    // Zone 상태 수신
     socket.on("zone_status", function (zoneData) {
       console.log("Zone status received:", zoneData);
       updateZoneStatus(zoneData);
     });
 
-    // 모드 상태 수신
     socket.on("mode_status", function (modeData) {
       console.log("Mode status received:", modeData);
       if (modeData && modeData.mode) {
@@ -612,74 +540,38 @@
       }
     }
 
-    // 팝업 모달 관련 함수
     let currentZoneNumber = null;
-    let modalPlotData = {};
-    let modalTopicData = {};
     
     function showZoneGraph(zoneNumber) {
-      const modal = document.getElementById('graph-modal');
-      const modalTitle = document.getElementById('modal-zone-title');
-      const modalPlot = document.getElementById('modal-plot');
-      
-      // 현재 활성화된 존 번호 저장
-      currentZoneNumber = zoneNumber;
-      
-      // 제목 설정
-      modalTitle.textContent = `Zone ${zoneNumber} 그래프`;
-      
-      // 해당 Zone의 토픽 가져오기
-      const zoneTopic = zoneTopics[zoneNumber];
-      
-      // 모달 표시
-      modal.style.display = 'flex';
-      
-      // 새로운 그래프 데이터 초기화
-      const plotData = [];
-      const layout = {
-        title: `Zone ${zoneNumber} - ${zoneTopic} 활동 감지`,
-        xaxis: { title: "Time", type: "date" },
-        yaxis: { title: "Value" }
-      };
-      
-      // 모달 그래프 초기화
-      Plotly.newPlot(modalPlot, [], layout, { responsive: true });
-      
-      // 서버에 해당 Zone의 토픽 구독 요청
-      socket.emit('subscribe_topic', { topic: zoneTopic, zoneNumber: zoneNumber });
-      
-      // 모달 토픽 데이터 초기화
-      modalTopicData = {};
-      modalPlotData = {};
-    }
-    
-    function closeModal() {
-      const modal = document.getElementById('graph-modal');
-      modal.style.display = 'none';
-      
-      // 현재 구독 중인 Zone 토픽 구독 해제
       if (currentZoneNumber !== null && zoneTopics[currentZoneNumber]) {
         socket.emit('unsubscribe_topic', { topic: zoneTopics[currentZoneNumber] });
       }
-      
-      currentZoneNumber = null;
-      modalPlotData = {};
-      modalTopicData = {};
+
+      currentZoneNumber = zoneNumber;
+
+      const zoneTopic = zoneTopics[zoneNumber];
+      currentTopic = zoneTopic;
+
+      const layout = {
+        title: `Zone ${zoneNumber} CSI 데이터`,
+        xaxis: { title: "Time", type: "date" },
+        yaxis: { title: "Amplitude" }
+      };
+
+      Plotly.newPlot(gd, [], layout, { responsive: true });
+
+      socket.emit('subscribe_topic', { topic: zoneTopic, zoneNumber: zoneNumber });
+
+      trMap = {};
+
+      for (let i = 1; i <= 6; i++) {
+        document.getElementById(`zone-${i}`).classList.remove('selected');
+      }
+
+      document.getElementById(`zone-${zoneNumber}`).classList.add('selected');
     }
     
-    // ESC 키로 모달 닫기
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape') {
-        closeModal();
-      }
-    });
-    
-    // 모달 외부 클릭 시 닫기
-    document.getElementById('graph-modal').addEventListener('click', function(event) {
-      if (event.target === this) {
-        closeModal();
-      }
-    });
+
   </script>
 </body>
 
